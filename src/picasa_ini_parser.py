@@ -1,5 +1,6 @@
 """Picasa tool INI file parser ."""
 
+import os
 import re
 
 class PicasaIniParser:
@@ -8,11 +9,12 @@ class PicasaIniParser:
         self.basepath = basepath
         self.filepath = filepath
         self.favorite_files = []
+        self.contact_files = {}
 
     def parse(self):
         """Parse the INI file."""
-        with open(self.filepath, 'r', encoding="utf-8") as file:
-            lines = file.readlines()
+        with open(self.filepath, 'r', encoding="utf-8") as ini_file:
+            lines = ini_file.readlines()
         is_picture_line = False
         is_contact_line = False
         picture_file_name = ''
@@ -33,7 +35,7 @@ class PicasaIniParser:
             if is_picture_line:
                 find_faces = re.match(r'faces=(.*)\n', line)
                 if line == 'star=yes\n':
-                    self.favorite_files.append(f"{self.basepath}/{picture_file_name}")
+                    self.favorite_files.append(f"{self.basepath}{os.sep}{picture_file_name}")
                 if find_faces:
                     print(find_faces.group(1))
                     faces = find_faces.group(1).split(',')
@@ -47,14 +49,10 @@ class PicasaIniParser:
                 continue
         for picture_file_name, faces in pictures_faces.items():
             for face in faces:
-                for tag, contact in contact_tags.items():
+                for tag, contact_name in contact_tags.items():
                     if face == tag:
-                        print(f"{picture_file_name} - {contact}")
-
-# Usage example
-parser = \
-    PicasaIniParser(\
-        '2001/20010601-20010603.Mariage.Varunah.et.Xavier',\
-        'tests/data/Perso/2001/20010601-20010603.Mariage.Varunah.et.Xavier/.picasa.ini')
-parser.parse()
-print(len(parser.favorite_files))
+                        print(f"{picture_file_name} - {contact_name}")
+                        if contact_name not in self.contact_files:
+                            self.contact_files[contact_name] = []
+                        self.contact_files[contact_name].append(\
+                            f"{self.basepath}{os.sep}{picture_file_name}")
