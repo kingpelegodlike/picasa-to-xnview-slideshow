@@ -53,9 +53,16 @@ def test_parse():
     assert parser.contact_files == {
         "Varunah DUVAL" : [
             f"{base_path}{os.sep}20010602_110000.Mariage.Varunah.et.Xavier.JPG",
+            f"{base_path}{os.sep}20010602_120000.Mariage.Varunah.et.Xavier.JPG",
+            f"{base_path}{os.sep}20010602_121000.Mariage.Varunah.et.Xavier.JPG",
+            f"{base_path}{os.sep}20010602_121100.Mariage.Varunah.et.Xavier.JPG",
             f"{base_path}{os.sep}20010602_122000.Mariage.Varunah.et.Xavier.JPG",
+            f"{base_path}{os.sep}20010602_123000.Mariage.Varunah.et.Xavier.JPG",
+            f"{base_path}{os.sep}20010602_130220.Mariage.Varunah.et.Xavier.JPG",
             f"{base_path}{os.sep}20010602_130330.Mariage.Varunah.et.Xavier.JPG",
-            f"{base_path}{os.sep}20010602_130440.Mariage.Varunah.et.Xavier.JPG"
+            f"{base_path}{os.sep}20010602_130440.Mariage.Varunah.et.Xavier.JPG",
+            f"{base_path}{os.sep}20010602_201000.Mariage.Varunah.et.Xavier.JPG",
+            f"{base_path}{os.sep}20010602_202000.Mariage.Varunah.et.Xavier.JPG"
         ],
         "Xavier DUVAL" : [
             f"{base_path}{os.sep}20010602_120000.Mariage.Varunah.et.Xavier.JPG",

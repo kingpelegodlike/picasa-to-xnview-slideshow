@@ -43,8 +43,12 @@ class PicasaIniParser:
                     self.favorite_files.append(f"{self.basepath}{os.sep}{picture_file_name}")
                 if find_faces:
                     logger.debug("contact tag list:'%s'", find_faces.group(1))
-                    faces = find_faces.group(1).split(',')
-                    pictures_faces[picture_file_name] = faces
+                    find_faces_split = find_faces.group(1).split(',')
+                    pictures_faces[picture_file_name] = []
+                    for find_face in find_faces_split:
+                        if not find_face.startswith("rect64"):
+                            face = find_face.split(';')[0]
+                            pictures_faces[picture_file_name].append(face)
                 continue
             if is_contact_line:
                 find_contact = re.match(r'(.*)=(.*);;+\n', line)
