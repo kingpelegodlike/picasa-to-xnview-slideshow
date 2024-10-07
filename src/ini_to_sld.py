@@ -7,11 +7,11 @@ import logging.config
 from picasa_ini_parser import PicasaIniParser # pylint: disable=import-error
 logger = logging.getLogger("ini_to_sld")
 
-def ini_to_sld(base_path, sld_path, contact_list=None, rule=None):
+def ini_to_sld(base_path, sld_file_name, contact_list=None, rule=""):
     """Convert a Picasa INI file to a SLD file."""
-    with open(sld_path, 'w', encoding="utf-8") as sld_file:
+    with open(sld_file_name, 'w', encoding="utf-8") as sld_file:
         sld_file.write("# Slide Show Sequence v2\n")
-    if contact_list and rule:
+    if contact_list and rule != "":
         contact_files = {}
         for file_path in Path(base_path).rglob('.picasa.ini'):
             logger.info("Parse Picasa INI file '%s'", file_path)
@@ -59,7 +59,7 @@ def ini_to_sld(base_path, sld_path, contact_list=None, rule=None):
                     for file_name in contact_files[contact_name]:
                         if file_name not in contact_file_list:
                             contact_file_list.append(file_name)
-        with open(sld_path, 'a', encoding="utf-8") as sld_file:
+        with open(sld_file_name, 'a', encoding="utf-8") as sld_file:
             for file_name in contact_file_list:
                 sld_file.write(f"\"{file_name}\"\n")
     else:
@@ -69,17 +69,19 @@ def ini_to_sld(base_path, sld_path, contact_list=None, rule=None):
             logger.debug("Picasa INI parser base path is '%s'", parser_base_path)
             ini_parser = PicasaIniParser(parser_base_path, file_path)
             ini_parser.parse()
-            with open(sld_path, 'a', encoding="utf-8") as sld_file:
+            with open(sld_file_name, 'a', encoding="utf-8") as sld_file:
                 for favorite_file in ini_parser.favorite_files:
                     sld_file.write(f"\"{favorite_file}\"\n")
 
 if __name__ == '__main__': # pragma: no cover
     os.makedirs("log", exist_ok=True)
+    os.makedirs("output", exist_ok=True)
     logging.config.fileConfig('src/ini_to_sld.conf')
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--folder-path", help="Folder path")
     parser.add_argument("-r", "--rule", choices=['and', 'or'], help="rule to apply")
     parser.add_argument("-c", "--contacts", help="contact list")
+    parser.add_argument("-o", "--output", help="SlideShow output file")
     parser.add_argument("-v", "--verbose", action="store_true",
                         help="increase output verbosity")
     args = parser.parse_args()
@@ -89,7 +91,7 @@ if __name__ == '__main__': # pragma: no cover
     if args.rule:
         if not args.contacts:
             parser.error("rule requires --contacts")
-    contacts = None
+    contacts = []
     if args.contacts:
         if not args.rule:
             parser.error("rule requires --rule")
@@ -101,5 +103,19 @@ if __name__ == '__main__': # pragma: no cover
     else:
         logger.debug("Relative Folder path")
         absolute_folder_path = os.path.join(os.getcwd(), args.folder_path.replace(f".{os.sep}", ""))
+    if not absolute_folder_path.endswith(os.sep):
+        absolute_folder_path += os.sep
+    if args.output:
+        if os.path.isabs(args.output):
+            logger.debug("Absolute output path")
+            sld_path = args.output
+        else:
+            logger.debug("Relative output path")
+            sld_path = os.path.join(os.getcwd(), "output", args.output)
+        if not sld_path.endswith(".sld"):
+            sld_path += ".sld"
+    else:
+        sld_path = os.path.join(os.getcwd(), "output", "star.sld")
     logger.info("Folder path is '%s'", absolute_folder_path)
-    ini_to_sld(absolute_folder_path, "star.sld", contacts, args.rule)
+    ini_to_sld(absolute_folder_path, sld_path, contacts, args.rule)
+    logger.info("SlideShow file is '%s'", sld_path)
