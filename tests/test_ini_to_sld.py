@@ -3,6 +3,8 @@
 import os
 from src.ini_to_sld import ini_to_sld
 
+os.makedirs("output", exist_ok=True)
+
 def test_ini_to_sld_all_contacts():
     """Test the __init__ method."""
     output_file_name = "output/test_ini_to_sld_all_contacts.sld"

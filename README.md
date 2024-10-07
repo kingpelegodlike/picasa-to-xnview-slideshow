@@ -4,9 +4,9 @@ Read ini files produced by Picasa tool to create the picture list to create a sl
 Usage
 -----
 
-usage: ini_to_sld.py [-h] [-f FOLDER_PATH] [-r {and,or}] [-c CONTACTS] [-o OUTPUT] [-v]
+Usage: ini_to_sld.py [-h] [-f FOLDER_PATH] [-r {and,or}] [-c CONTACTS] [-o OUTPUT] [-v]
 
-options:  
+Options:  
   -h, --help. Descrition: show this help message and exit.  
   -f FOLDER_PATH, --folder-path FOLDER_PATH. Descrition: Folder path.  
   -r {and,or}, --rule {and,or}. Descrition: rule to apply.  
