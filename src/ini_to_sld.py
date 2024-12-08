@@ -15,7 +15,9 @@ def ini_to_sld(base_path, sld_file_name, contact_list=None, rule=""):
         contact_files = {}
         for file_path in Path(base_path).rglob('.picasa.ini'):
             logger.info("Parse Picasa INI file '%s'", file_path)
-            parser_base_path = str(file_path.parent.absolute()).split(base_path)[1]
+            logger.info("Parse Picasa INI directory '%s'", file_path.parent.absolute())
+            parser_base_path = (str(file_path.parent.absolute())+os.sep).split(base_path)[1]
+            # parser_base_path = str(file_path.parent.absolute())
             logger.debug("Picasa INI parser base path is '%s'", parser_base_path)
             ini_parser = PicasaIniParser(parser_base_path, file_path)
             ini_parser.parse()
@@ -65,7 +67,10 @@ def ini_to_sld(base_path, sld_file_name, contact_list=None, rule=""):
     else:
         for file_path in Path(base_path).rglob('.picasa.ini'):
             logger.info("Parse Picasa INI file '%s'", file_path)
-            parser_base_path = str(file_path.parent.absolute()).split(base_path)[1]
+            if str(file_path.parent.absolute())+os.sep == str(base_path):
+                parser_base_path = "."
+            else:
+                parser_base_path = str(file_path.parent.absolute()).split(base_path)[1]
             logger.debug("Picasa INI parser base path is '%s'", parser_base_path)
             ini_parser = PicasaIniParser(parser_base_path, file_path)
             ini_parser.parse()
